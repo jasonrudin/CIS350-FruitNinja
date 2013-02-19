@@ -1,0 +1,28 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<TextView 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="Welcome to the PaintBrush Activity!"/>
+
+<edu.upenn.cis350.fruitninja.SlicingView android:id="@+id/SlicingView"
+    android:layout_width="fill_parent"
+    android:layout_height="400px" />
+
+<LinearLayout 
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<edu.upenn.cis350.fruitninja.ScoreView android:id="@+id/ScoreView"
+    android:layout_width="370px"
+    android:layout_height="wrap_content"/>
+<Button android:id="@+id/Clear"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:text="Reset"
+    android:onClick="onClearButtonClick"/>
+</LinearLayout>
+</LinearLayout>
