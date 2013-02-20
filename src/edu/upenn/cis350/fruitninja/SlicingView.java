@@ -30,6 +30,7 @@ public class SlicingView extends View{
 		init();
 	}
 	
+	private int gravity;
 	public boolean clear;
 	public Paint paintBrush;
 	public Path p;
@@ -37,31 +38,52 @@ public class SlicingView extends View{
 	public ArrayList<Paint> strokesPaint;
 	
 	//fruit ninja stuff
-	int squarex, squarey;
-	public ArrayList<ShapeDrawable> objects;
+	//Old square implementation
+	/*int squarex, squarey;
+	public ArrayList<ShapeDrawable> objects;*/
+	private ArrayList<GameObject> gameobjs;
 	int c = Color.RED;
 	
 	protected void init(){
+		gravity = 1;
 		clear = false;
 		strokes = new ArrayList<Path>();
 		strokesPaint = new ArrayList<Paint>();
+		
+		//Old square - objects implementation
+		/*
 		objects = new ArrayList<ShapeDrawable>();
 		squarex = 0;
 		squarey = 50;
 		ShapeDrawable square = new ShapeDrawable(new RectShape());
-		square.setBounds(squarex,squarey,squarex+50,squarey+50);
-		objects.add(square);
+		objects.add(square);*/
+		
+		gameobjs = new ArrayList<GameObject>();
+		GameObject square = new GameObject(0, 100, 50, 50, 7, 10);
+		GameObject squareTwo = new GameObject(400, 100, 100, 100, -7, 15);
+		square.getPaint().setColor(Color.RED);
+		squareTwo.getPaint().setColor(Color.BLUE);
+		gameobjs.add(squareTwo);
+		gameobjs.add(square);
 	}
 	
 	protected void onDraw(Canvas canvas){
+		//Old square - objects implementation
+		/*
 		//move square (SUPER PRIMITIVE)
 		squarex+=2;
+		squarey+=gravity;
 		for (int i = 0; i < objects.size(); i++){
 			objects.get(i).getPaint().setColor(c);
 			objects.get(i).setBounds(squarex,squarey,squarex+50,squarey+50);
 			objects.get(i).draw(canvas);
-		}
+		}*/
 		
+		for(GameObject go : gameobjs){
+			//Decrease Y speed by the amount of gravity
+			go.setSpeedY(go.getSpeedY()-gravity);
+			go.draw(canvas);
+		}
 		
 		for (int i = 0; i < strokes.size(); i++){
 			canvas.drawPath(strokes.get(i), strokesPaint.get(i));
@@ -75,8 +97,7 @@ public class SlicingView extends View{
 	    	init();
 	    	invalidate();
 	    }
-	    if (squarex <= 400)	//to stop the square
-	    	invalidate();
+	    invalidate();
 	}
 	
 	public boolean onTouchEvent(MotionEvent e){
@@ -101,12 +122,26 @@ public class SlicingView extends View{
 			int x = (int)e.getX();
 			int y = (int)e.getY();
 			p.lineTo(x,y);
+			
+			// Old implementation
+			/*
 			if (x >= squarex && x <= squarex+50 && y >= squarey && y <= squarey+50 ){
 				//intersection test
 				objects.clear();	
+			}*/
+			
+			//Tests every GameObject in the gameobjs list
+			//If intersection is detected, removes that GameObject from the list
+			for (GameObject go : gameobjs){
+				if(go.intersect(x, y)){
+					gameobjs.remove(go);
+				}
 			}
 			invalidate();
 			return true;
+		}
+		else if (e.getAction() == MotionEvent.ACTION_UP){
+			strokes.clear();
 		}
 		return false;
 	}
